@@ -1,5 +1,9 @@
 package com.geek.android3_movies.ui.movies_list;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -28,6 +32,7 @@ public class MoviesViewModel extends ViewModel {
     MutableLiveData<Resource<List<Movies>>> getMovies(){
         return repository.fetchMovies();
     }
+
 }
 
 

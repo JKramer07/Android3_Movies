@@ -5,6 +5,8 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 
+import org.jetbrains.annotations.NotNull;
+
 public class RoomClient {
 
     public AppDatabase provideDataBase(Context context){
@@ -13,7 +15,7 @@ public class RoomClient {
                 .build();
     }
 
-    public MoviesDao provideMoviesDao(AppDatabase database){
+    public MoviesDao provideMoviesDao(@NotNull AppDatabase database){
         return database.moviesDao();
     }
 }

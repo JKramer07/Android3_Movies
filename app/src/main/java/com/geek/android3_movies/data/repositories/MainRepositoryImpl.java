@@ -1,5 +1,10 @@
 package com.geek.android3_movies.data.repositories;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.widget.Toast;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.geek.android3_movies.App;
@@ -41,7 +46,6 @@ public class MainRepositoryImpl implements MainRepository {
                 } else {
                     liveData.setValue(Resource.error(response.errorBody().toString(), null));
                 }
-
             }
 
             @Override
@@ -73,5 +77,7 @@ public class MainRepositoryImpl implements MainRepository {
         });
         return movieLiveData;
     }
+
+
 
 }

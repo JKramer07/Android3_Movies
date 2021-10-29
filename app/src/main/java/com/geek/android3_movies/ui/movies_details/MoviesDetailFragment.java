@@ -1,5 +1,8 @@
 package com.geek.android3_movies.ui.movies_details;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.geek.android3_movies.R;
@@ -22,6 +26,9 @@ import com.geek.android3_movies.databinding.FragmentMoviesDetailBinding;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class MoviesDetailFragment extends BaseFragment<FragmentMoviesDetailBinding> {
 
     @Inject
@@ -42,6 +49,9 @@ public class MoviesDetailFragment extends BaseFragment<FragmentMoviesDetailBindi
     protected void initialize() {
         viewModel = new ViewModelProvider(requireActivity()).get(MoviesDetailViewModel.class);
 
+        viewModel.getMovieDetail(movieId);
+        getArgs();
+        isOnline(getContext());
 
     }
 
@@ -61,14 +71,12 @@ public class MoviesDetailFragment extends BaseFragment<FragmentMoviesDetailBindi
             binding.tvContentDetail.setText(movies.getDescription());
             movieId = movies.getId();
         }
-        viewModel.getMovieDetail(movieId);
 
-        initRoom();
     }
 
     @Override
     protected void setupObservers() {
-        getArgs();
+
         viewModel.getMovieDetail(movieId).observe(getViewLifecycleOwner(), new Observer<Resource<Movies>>() {
             @Override
             public void onChanged(Resource<Movies> moviesResource) {
@@ -83,7 +91,13 @@ public class MoviesDetailFragment extends BaseFragment<FragmentMoviesDetailBindi
                         break;
                     }
                     case ERROR:{
-                        binding.tvErrorDetail.setText(moviesResource.message);
+                        if (isOnline(getContext())){
+                            binding.tvErrorDetail.setText(null);
+                            binding.progressDetailFrag.setVisibility(View.GONE);
+                        } else {
+                            binding.tvErrorDetail.setText(moviesResource.message);
+                            binding.progressDetailFrag.setVisibility(View.GONE);
+                        }
                         break;
                     }
                 }
@@ -91,8 +105,17 @@ public class MoviesDetailFragment extends BaseFragment<FragmentMoviesDetailBindi
         });
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public boolean isOnline(Context context){
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()){
+            setupObservers();
+            Toast.makeText(context, "Internet is connected!", Toast.LENGTH_SHORT).show();
+        } else {
+            initRoom();
+            Toast.makeText(context, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 }

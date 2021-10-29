@@ -33,7 +33,6 @@ public class Movies implements Serializable {
     @Expose
     private String image;
 
-    @Ignore
     public Movies() {
     }
 

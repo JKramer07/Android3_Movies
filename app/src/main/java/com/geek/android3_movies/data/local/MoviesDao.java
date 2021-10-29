@@ -15,9 +15,6 @@ public interface MoviesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAllMovies(List<Movies> movies);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertMovie(Movies movie);
-
     @Query("SELECT * FROM movies")
     List<Movies> getAllMovies();
 
