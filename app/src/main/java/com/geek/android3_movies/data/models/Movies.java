@@ -3,6 +3,11 @@ package com.geek.android3_movies.data.models;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import com.bumptech.glide.request.target.ViewTarget;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -10,23 +15,25 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
+@Entity(tableName = "movies")
 public class Movies implements Serializable {
 
+    @PrimaryKey
     @SerializedName("id")
     @Expose
+    @NonNull
     private String id;
     @SerializedName("title")
     @Expose
     private String title;
-
     @SerializedName("description")
     @Expose
     private String description;
-
     @SerializedName("image")
     @Expose
     private String image;
 
+    @Ignore
     public Movies() {
     }
 

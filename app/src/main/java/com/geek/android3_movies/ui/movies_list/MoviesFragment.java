@@ -1,5 +1,6 @@
 package com.geek.android3_movies.ui.movies_list;
 
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,17 +16,28 @@ import android.view.ViewGroup;
 import com.geek.android3_movies.R;
 import com.geek.android3_movies.base.BaseFragment;
 import com.geek.android3_movies.common.Resource;
+import com.geek.android3_movies.data.local.MoviesDao;
 import com.geek.android3_movies.data.models.Movies;
 import com.geek.android3_movies.databinding.FragmentMoviesBinding;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class MoviesFragment extends BaseFragment<FragmentMoviesBinding> implements OnClickListener{
+
+    @Inject
+    MoviesDao moviesDao;
 
     private MovieAdapter adapter;
     private MoviesViewModel viewModel;
 
     public MoviesFragment(){}
+
+
 
     @Override
     protected FragmentMoviesBinding bind() {
@@ -41,6 +53,7 @@ public class MoviesFragment extends BaseFragment<FragmentMoviesBinding> implemen
     private void setupRecycler() {
         adapter = new MovieAdapter();
         adapter.setListener(this);
+        adapter.setMovie(moviesDao.getAllMovies());
         binding.moviesRv.setAdapter(adapter);
     }
 

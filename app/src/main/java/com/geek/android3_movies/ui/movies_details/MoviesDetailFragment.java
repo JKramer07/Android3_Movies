@@ -16,10 +16,16 @@ import com.bumptech.glide.Glide;
 import com.geek.android3_movies.R;
 import com.geek.android3_movies.base.BaseFragment;
 import com.geek.android3_movies.common.Resource;
+import com.geek.android3_movies.data.local.MoviesDao;
 import com.geek.android3_movies.data.models.Movies;
 import com.geek.android3_movies.databinding.FragmentMoviesDetailBinding;
 
+import javax.inject.Inject;
+
 public class MoviesDetailFragment extends BaseFragment<FragmentMoviesDetailBinding> {
+
+    @Inject
+    MoviesDao moviesDao;
 
     private MoviesDetailViewModel viewModel;
     private Movies movies = new Movies();
@@ -36,16 +42,28 @@ public class MoviesDetailFragment extends BaseFragment<FragmentMoviesDetailBindi
     protected void initialize() {
         viewModel = new ViewModelProvider(requireActivity()).get(MoviesDetailViewModel.class);
 
+
+    }
+
+    private void initRoom() {
+        Movies moviesRoom = moviesDao.getMovie(movieId);
+
+        Glide.with(this).load(moviesRoom.getImage()).centerCrop().into(binding.ivImageDetail);
+        binding.tvNameDetail.setText(moviesRoom.getTitle());
+        binding.tvContentDetail.setText(moviesRoom.getDescription());
     }
 
     private void getArgs() {
         movies = (Movies) getArguments().getSerializable("movie");
-        if (movies != null){
+        if (movies != null) {
             Glide.with(binding.getRoot().getContext()).load(movies.getImage()).centerCrop().into(binding.ivImageDetail);
             binding.tvNameDetail.setText(movies.getTitle());
             binding.tvContentDetail.setText(movies.getDescription());
             movieId = movies.getId();
         }
+        viewModel.getMovieDetail(movieId);
+
+        initRoom();
     }
 
     @Override

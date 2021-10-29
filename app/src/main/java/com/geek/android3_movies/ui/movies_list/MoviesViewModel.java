@@ -11,9 +11,23 @@ import com.geek.android3_movies.data.repositories.MainRepositoryImpl;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
 public class MoviesViewModel extends ViewModel {
 
+    private MainRepositoryImpl repository;
+
+    @Inject
+    public MoviesViewModel(MainRepositoryImpl mainRepository){
+        this.repository = mainRepository;
+    }
+
     MutableLiveData<Resource<List<Movies>>> getMovies(){
-        return App.repository.fetchMovies();
+        return repository.fetchMovies();
     }
 }
+
+
